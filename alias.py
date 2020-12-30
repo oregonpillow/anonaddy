@@ -1,19 +1,39 @@
+from uuid import uuid
 import requests
 import json
 
+bearer = 'Bearer ' + uuid
 description = input('Description: ')
+
+http_codes = {
+"201":"---Success!---",
+"400":"Bad Request -- Your request sucks",
+"401":"Unauthenticated -- Your API key is wrong",
+"403":"Forbidden -- You do not have permission to access the requested resource",
+"404":"Not Found -- The specified resource could not be found",
+"405":"Method Not Allowed -- You tried to access an endpoint with an invalid method",
+"422":"Validation Error -- The given data was invalid",
+"429":"Too Many Requests -- You're sending too many requests or have reached your limit for new aliases",
+"500":"Internal Server Error -- We had a problem with our server. Try again later",
+"503":"Service Unavailable -- We're temporarially offline for maintanance. Please try again later",
+}
+
 
 url = 'https://app.anonaddy.com/api/v1/aliases'
 payload = {
     "domain": "anonaddy.me",
     "description": description,
-    "format": "uuid"}
-    
+    "format": "uuid"
+}
+
 headers = {
   'Content-Type': 'application/json',
   'X-Requested-With': 'XMLHttpRequest',
-  'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMTNjMjZmY2I3YTY4NDczYTlhMjBlMDI1Y2I5MGVmNmVmMjkxYTY2YTQ0OWM0NTNmYzRmNjNkYTg5OWRkNTQyZDA0MDc0NjQyOGMyOTQxOGEiLCJpYXQiOiIxNjA5MzQ0NzM2LjYxMjMwOSIsIm5iZiI6IjE2MDkzNDQ3MzYuNjEyMzE0IiwiZXhwIjoiMTc2NzExMTEzNi41OTQ1NDEiLCJzdWIiOiIyMmRjYWQ1Yy0yMWE1LTRhNjEtYmFlZS00NzNiNzJkNzMyZGMiLCJzY29wZXMiOltdfQ.vLSAlV8cgugj7J78aWj1FMy2Mr0JWZhqNoxekM6CmYPtBYuYhlgRndRTvX9k8vUnK3-I7XuW8YJIZhaeGavYOw899zMkEGNfOzpaqs1XEXyHy8ji8atCnATC6Vo6pLgeNQqyvzgJ1Ptt2yRa9XiQgPUxbyfKcJ7fChuisIQlFdMy5WjZR6q8Tracar6HOAVynXtUZkNWCg_yGIC9hS4LSfS6sDWx3898yV98983BzDqeDp_yQGpYID6FLsR9_L0Bl_XZq1Vd24QZIi-MnIFfXGFj2ZBGFpR-Qysgf1ZTFiewGboYIbqG9P1-9bdGQRoLBjUCiMt8vjmNQgU3bOzSv5wWZ0P5RqFd9Z9z-9jVFYu9HlW5rlvdLRNVtKR_H3j-6yv2yztH0TH0LNvLH8IItbd8eZ1OG9rtlu09pYMXhuX3rO1rxrAn-DUBNxT2orI-jcJybPe9Hui8hHpyDCUxCpycvoCSVyYHZCfOZv3r0MiOfidP-CzdoN2QGp2KBKwrXx4Tg0eZ7egFsBD77bqv0MiiPo-O0mqrCxF0HNWEhO_3grYvJtM-iHvQZxr2mi0UfZNem61T_wLfu6n_zlZp62UcnIaaiGNtFpvx3U2XyLI5pxu2fg-gwge0NBF4XVhuG6OgGd9ROPKgApJxfEqPbwwCa6uONYyo4l7ag2z0ulY'
+  'Authorization': bearer
 }
 
 response = requests.request('POST', url, headers=headers, json=payload)
+status_code = str(response.status_code)
+print(http_codes[status_code])
 print(response.json()['data']['email'])
+
